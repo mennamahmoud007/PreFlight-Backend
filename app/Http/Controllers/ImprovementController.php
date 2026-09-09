@@ -50,4 +50,17 @@ class ImprovementController extends Controller
         return ImprovementResource::collection($improvements);
 
     }
+
+    // PATH: api/projects/{project}/improvement/{improvement}/status
+    public function updateStatus(Request $request, string $projectId, string $improvementId)
+    {
+        $project = Project::where('device_id', $request->device_id)
+            ->findOrFail($projectId);
+        $improvement = $project->improvements()->findOrFail($improvementId);
+        $improvement->update([
+            'status' => $improvement->status === 'pending' ? 'applied' : 'pending',
+        ]);
+
+        return new ImprovementResource($improvement);
+    }
 }
