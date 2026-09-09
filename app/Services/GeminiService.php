@@ -308,4 +308,98 @@ class GeminiService
             ],
         ];
     }
+
+    public function improvement(Project $project, $analysis): array
+    {
+        $prompt = $this->buildImprovementPrompt($project, $analysis);
+
+        return $this->generate($prompt, $this->improvementSchema());
+    }
+
+    private function buildImprovementPrompt(Project $project, $analysis): string
+    {
+        return <<<PROMPT
+        You are an expert startup improvement strategist.
+
+        Based on the project analysis and stress test below,
+        identify the most important weaknesses that should be improved.
+
+        Project:
+        {$project->name}
+
+        Description:
+        {$project->description}
+
+        Target audience:
+        {$project->target_audience}
+
+        Industry:
+        {$project->industry}
+
+        Analysis summary:
+        {$analysis->summary}
+
+        Strengths:
+        {$this->formatList($analysis->strengths)}
+
+        Weaknesses:
+        {$this->formatList($analysis->weaknesses)}
+
+        Risks:
+        {$this->formatList($analysis->risks)}
+
+        Stress test:
+        {$this->formatList($analysis->stress_test)}
+
+        For each important weakness:
+
+        - Identify the weakness clearly.
+        - Identify the opportunity hidden behind the weakness.
+        - Explain why addressing it matters.
+        - Suggest one practical action the founder can take.
+
+        Focus on actionable improvements.
+        Do not simply repeat the analysis.
+        Do not invent market facts that were not provided.
+
+        PROMPT;
+    }
+
+    private function improvementSchema(): array
+    {
+        return [
+            'type' => 'object',
+            'properties' => [
+                'improvements' => [
+                    'type' => 'array',
+                    'items' => [
+                        'type' => 'object',
+                        'properties' => [
+                            'weakness' => [
+                                'type' => 'string',
+                            ],
+                            'opportunity' => [
+                                'type' => 'string',
+                            ],
+                            'why_it_matters' => [
+                                'type' => 'string',
+                            ],
+                            'suggested_action' => [
+                                'type' => 'string',
+                            ],
+                        ],
+                        'required' => [
+                            'weakness',
+                            'opportunity',
+                            'why_it_matters',
+                            'suggested_action',
+                        ],
+                    ],
+                ],
+            ],
+            'required' => [
+                'improvements',
+            ],
+        ];
+    }
 }
