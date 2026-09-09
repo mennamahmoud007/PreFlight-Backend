@@ -21,7 +21,7 @@ class AnalysisResource extends JsonResource
                 'problem' => $this->problem_score,
                 'target' => $this->target_score,
                 'value' => $this->value_score,
-                'feasability' => $this->feasability_score,
+                'feasibility' => $this->feasibility_score,
                 'differentiation' => $this->differentiation_score,
                 'overall' => $this->overall_score,
             ],

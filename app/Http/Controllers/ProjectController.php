@@ -39,6 +39,7 @@ class ProjectController extends Controller
      */
     // post api/projects
     public function store(StoreProjectRequest $request)
+    // ... mean that the request validated data will be merged with the device_id and status fields to create a new project
     {
         $project = Project::create([
             ...$request->validated(),

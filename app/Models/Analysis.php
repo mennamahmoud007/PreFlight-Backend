@@ -15,7 +15,7 @@ class Analysis extends Model
         'problem_score',
         'target_score',
         'value_score',
-        'feasability_score',
+        'feasibility_score',
         'differentiation_score',
         'overall_score',
         'summary',

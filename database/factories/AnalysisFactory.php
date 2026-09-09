@@ -23,7 +23,7 @@ class AnalysisFactory extends Factory
             'problem_score' => fake()->numberBetween(60, 95),
             'target_score' => fake()->numberBetween(60, 95),
             'value_score' => fake()->numberBetween(60, 95),
-            'feasability_score' => fake()->numberBetween(60, 95),
+            'feasibility_score' => fake()->numberBetween(60, 95),
             'differentiation_score' => fake()->numberBetween(50, 95),
             'overall_score' => fake()->numberBetween(60, 95),
 

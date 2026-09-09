@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AnalysisController;
 use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\StressTestController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('device')->group(function () {
