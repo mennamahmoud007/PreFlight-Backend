@@ -60,6 +60,9 @@ class ImprovementController extends Controller
         $improvement->update([
             'status' => $improvement->status === 'pending' ? 'applied' : 'pending',
         ]);
+        $project->update([
+            'updated_at' => now(),
+        ]);
 
         return new ImprovementResource($improvement);
     }

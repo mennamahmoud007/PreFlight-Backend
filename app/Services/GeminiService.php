@@ -402,4 +402,92 @@ class GeminiService
             ],
         ];
     }
+
+    public function pitch(Project $project, $analysis, $appliedImprovements): array
+    {
+        $prompt = $this->buildPitchPrompt($project, $analysis, $appliedImprovements);
+
+        return $this->generate($prompt, $this->pitchSchema());
+    }
+
+    private function buildPitchPrompt(Project $project, $analysis, $appliedImprovements): string
+    {
+        return <<<PROMPT
+        You are a startup pitch writer.
+        Create a clear, concise, realistic pitch for the following project.
+
+        PROJECT:
+        Name: {$project->name}
+        Description: {$project->description}
+        Target Audience: {$project->target_audience}
+        Industry: {$project->industry}
+
+        ANALYSIS:
+        {$analysis->toJson()}
+
+        APPLIED IMPROVEMENTS:
+        {$this->formatList($appliedImprovements->toArray())}
+
+        Generate exactly these 8 pitch sections:
+
+        1. problem
+        2. solution
+        3. target_audience
+        4. value_proposition
+        5. core_features
+        6. business_model
+        7. competitive_advantage
+        8. go_to_market
+
+        Rules:
+        - Generate exactly one section for each section_type.
+        - Keep the content concise and presentation-ready.
+        - Do not invent facts, statistics, competitors, market sizes, or user numbers.
+        - Use only information supported by the project, analysis, and applied improvements.
+        - Applied improvements should influence the pitch where relevant.
+        - Do not mention that AI generated the pitch.
+        - Make the pitch persuasive but realistic.
+
+        PROMPT;
+    }
+
+    private function pitchSchema(): array
+    {
+        return [
+            'type' => 'object',
+            'properties' => [
+                'sections' => [
+                    'type' => 'array',
+                    'items' => [
+                        'type' => 'object',
+                        'properties' => [
+                            'section_type' => [
+                                'type' => 'string',
+                                'enum' => [
+                                    'problem',
+                                    'solution',
+                                    'target_audience',
+                                    'value_proposition',
+                                    'core_features',
+                                    'business_model',
+                                    'competitive_advantage',
+                                    'go_to_market',
+                                ],
+                            ],
+                            'content' => [
+                                'type' => 'string',
+                            ],
+                        ],
+                        'required' => [
+                            'section_type',
+                            'content',
+                        ],
+                    ],
+                ],
+            ],
+            'required' => [
+                'sections',
+            ],
+        ];
+    }
 }
