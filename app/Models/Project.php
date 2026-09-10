@@ -32,7 +32,7 @@ class Project extends Model
         return $this->hasOne(Analysis::class);
     }
 
-    public function pitchSection(): HasMany
+    public function pitchSections(): HasMany
     {
         return $this->hasMany(PitchSection::class);
     }

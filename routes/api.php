@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AnalysisController;
 use App\Http\Controllers\ImprovementController;
+use App\Http\Controllers\PitchController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\StressTestController;
 use Illuminate\Support\Facades\Route;
@@ -12,4 +13,8 @@ Route::middleware('device')->group(function () {
     Route::post('projects/{project}/stress-test', [StressTestController::class, 'store']);
     Route::post('projects/{project}/improvement', [ImprovementController::class, 'store']);
     Route::patch('projects/{project}/improvement/{improvement}/status', [ImprovementController::class, 'updateStatus']);
+    Route::get('projects/{project}/pitch', [PitchController::class, 'index']);
+    Route::post('projects/{project}/pitch', [PitchController::class, 'store']);
+    Route::patch('projects/{project}/pitch/{section}', [PitchController::class, 'update']);
+    Route::post('projects/{project}/pitch/{section}/regenerate', [PitchController::class, 'regenerate']);
 });
