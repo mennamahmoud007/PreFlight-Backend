@@ -53,7 +53,22 @@ class PitchController extends Controller
     }
 
     // patch api/projects/{project}/pitch/{section}
-    public function update(Request $request, string $projectId, string $sectionId) {}
+    public function update(Request $request, string $projectId, string $sectionId)
+    {
+        $project = Project::where('device_id', $request->device_id)->findOrFail($projectId);
+        $PitchSection = $project->pitchSections()->findOrFail($sectionId);
+        $request->validate([
+            'content' => 'required|string',
+        ]);
+        $PitchSection->update([
+            'content' => $request->content,
+        ]);
+        $project->update([
+            'updated_at' => now(),
+        ]);
+
+        return new PitchSectionResource($PitchSection);
+    }
 
     // post api/projects/{project}/pitch/{section}/regenerate
     public function regenerate(Request $request, string $projectId, string $sectionId, GeminiService $geminiService) {}
