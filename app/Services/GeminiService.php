@@ -490,4 +490,60 @@ class GeminiService
             ],
         ];
     }
+
+    public function regeneratePitchSection(Project $project, $analysis, $appliedImprovements, string $sectionType): array
+    {
+        $prompt = $this->buildRegeneratePitchPrompt($project, $analysis, $appliedImprovements, $sectionType);
+
+        return $this->generate($prompt, $this->regeneratePitchSchema($sectionType));
+    }
+
+    private function buildRegeneratePitchPrompt(Project $project, $analysis, $appliedImprovements, string $sectionType): string
+    {
+        return <<<PROMPT
+        You are a startup pitch writer.
+        Regenerate only the following pitch section:
+
+        Section:
+        {$sectionType}
+
+        PROJECT:
+        Name: {$project->name}
+        Description: {$project->description}
+        Target Audience: {$project->target_audience}
+        Industry: {$project->industry}
+
+        ANALYSIS:
+        {$analysis->toJson()}
+
+        APPLIED IMPROVEMENTS:
+        {$this->formatList($appliedImprovements->toArray())}
+
+        Rules:
+        - Generate only the requested section.
+        - Keep the content concise and presentation-ready.
+        - Do not invent facts, statistics, competitors, market sizes, or user numbers.
+        - Use only information supported by the project, analysis, and applied improvements.
+        - Applied improvements should influence the section where relevant.
+        - Do not mention that AI generated the content.
+        - Make the content persuasive but realistic.
+
+
+        PROMPT;
+    }
+
+    private function regeneratePitchSchema(string $sectionType): array
+    {
+        return [
+            'type' => 'object',
+            'properties' => [
+                'content' => [
+                    'type' => 'string',
+                ],
+            ],
+            'required' => [
+                'content',
+            ],
+        ];
+    }
 }
