@@ -23,6 +23,18 @@ class ProjectResource extends JsonResource
             'status' => $this->status,
             'score' => $this->score,
             'last_checked_at' => $this->last_checked_at,
+
+            'analysis' => new AnalysisResource(
+                $this->whenLoaded('analysis')
+            ),
+
+            'improvements' => ImprovementResource::collection(
+                $this->whenLoaded('improvements')
+            ),
+
+            'pitch_sections' => PitchSectionResource::collection(
+                $this->whenLoaded('pitchSections')
+            ),
         ];
     }
 }

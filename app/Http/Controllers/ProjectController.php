@@ -57,6 +57,11 @@ class ProjectController extends Controller
     public function show(Request $request, string $id)
     {
         $project = Project::where('device_id', $request->device_id)
+            ->with([
+                'analysis',
+                'improvements',
+                'pitchSections',
+            ])
             ->findOrFail($id);
 
         return new ProjectResource($project);
